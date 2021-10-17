@@ -45,3 +45,108 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 
+// this array holds the team data provided from the inquirer question prompts
+const team = [];
+
+const questions = [
+  {
+    type: "input",
+    message: "Please enter your name: ",
+    name: "name"
+  },
+  {
+    type: "input",
+    message: "Please enter your email address: ",
+    name: "email"
+  },
+  {
+    type: "input",
+    message: "Please enter your employee ID: ",
+    name: "id"
+  },
+  {
+    type: "list",
+    message: "Please select your job title (role): ",
+    name: "role",
+    choices: ["Manager", "Engineer", "Intern"]
+  }
+];
+
+function generateHtml() {
+  //...
+};
+
+// asks if user has any more employees to add
+function addAdtl() {
+  inquirer
+    .prompt([
+      {
+        type: "confirm",
+        message: "Would you like to add another team member?",
+        name: "addEmployee",
+      }
+    ])
+    .then(response => {
+      if (response.addEmployee === true) {
+        init(team)
+      } else {
+        generateHtml()
+      }
+    })
+};
+
+function useResponses(role) { // <-- TRYING TO PASS DATA INTO HERE
+  if (answers.role === "Manager") {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "Please enter your office number: ",
+          name: "office"
+        }
+      ])
+      .then(response => {
+        const TeamManager = new Manager(answers.name, answers.email, answers.id, answers.role, response.office)
+        team.push(TeamManager)
+        addAdtl()
+      });
+  } else if (answers.role === "Engineer") {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "Please enter your github username: ",
+          name: "github"
+        }
+      ])
+      .then(response => {
+        const EngineerOnTeam = new Engineer(answers.name, answers.email, answers.id, answers.role, response.github)
+        team.push(EngineerOnTeam)
+        addAdtl()
+      });
+  } else if (answers.role === "Intern") {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "Please enter your school name: ",
+          name: "school"
+        }
+      ])
+      .then(response => {
+        const InternOnTeam = new Intern(answers.name, answers.email, answers.id, answers.role, response.school)
+        team.push(InternOnTeam)
+        addAdtl()
+      })
+  }
+};
+
+function init() {
+  inquirer
+    .prompt(questions)
+    .then(response => {
+      const answers = useResponses(response) // STOPPED HERE SUNDAY MORNING
+    })
+};
+
+init();

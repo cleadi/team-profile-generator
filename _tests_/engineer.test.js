@@ -21,11 +21,11 @@ describe("Engineer", () => {
     expect(engineerTest.role).toBe("Engineer")
   });
 
-  it("they have a GitHub username", () => {
+  it("they have a github username", () => {
     keys = Object.keys(engineerTest)
     optionKey = keys[4]
-    expect(optionKey).toBe("GitHub")
-    expect(engineerTest.gitHub).toEqual(expect.any(String))
+    expect(optionKey).toBe("github")
+    expect(engineerTest.github).toEqual(expect.any(String))
   });
 
 });
