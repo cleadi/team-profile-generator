@@ -45,7 +45,6 @@ const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 
-// this array holds the team data provided from the inquirer question prompts
 const team = [];
 
 const questions = [
@@ -72,11 +71,56 @@ const questions = [
   }
 ];
 
-function generateHtml() {
-  //...
+// STOPPED HERE SUNDAY NIGHT
+  // need to adjust id's in card
+  // need to add jQuery, make sure I'm calling functions in the correct places within the HTML ${HERE}
+  
+function generateHtmlCard() {
+  `
+  <div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 id="employee-role" class="card-title"></h5>
+    <p id="" class="card-text"></p>
+    <p class="card-text"></p>
+    <p class="card-text"></p>
+  </div>`
+}
+
+function generateHtmlSkel() {
+  `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./output/style.css" />
+  <title>Team Profile</title>
+</head>
+<body>
+
+  <header class="container-fliud">
+    <nav class="navbar navbar-dark bg-primary justify-content-center">
+      <h1>Team Profile</h1>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container-fluid row col-12">
+
+        <div class="card-deck container-fluid row">
+          
+          ${GENERATECARDHERE}
+
+          </div>
+        </div>
+  </main>
+  
+</body>
+</html>`
 };
 
-// asks if user has any more employees to add
 function addAdtl() {
   inquirer
     .prompt([
@@ -90,62 +134,58 @@ function addAdtl() {
       if (response.addEmployee === true) {
         init(team)
       } else {
-        generateHtml()
+        generateHtmlSkel()
       }
     })
-};
-
-function useResponses(role) { // <-- TRYING TO PASS DATA INTO HERE
-  if (answers.role === "Manager") {
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          message: "Please enter your office number: ",
-          name: "office"
-        }
-      ])
-      .then(response => {
-        const TeamManager = new Manager(answers.name, answers.email, answers.id, answers.role, response.office)
-        team.push(TeamManager)
-        addAdtl()
-      });
-  } else if (answers.role === "Engineer") {
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          message: "Please enter your github username: ",
-          name: "github"
-        }
-      ])
-      .then(response => {
-        const EngineerOnTeam = new Engineer(answers.name, answers.email, answers.id, answers.role, response.github)
-        team.push(EngineerOnTeam)
-        addAdtl()
-      });
-  } else if (answers.role === "Intern") {
-    inquirer
-      .prompt([
-        {
-          type: "input",
-          message: "Please enter your school name: ",
-          name: "school"
-        }
-      ])
-      .then(response => {
-        const InternOnTeam = new Intern(answers.name, answers.email, answers.id, answers.role, response.school)
-        team.push(InternOnTeam)
-        addAdtl()
-      })
-  }
 };
 
 function init() {
   inquirer
     .prompt(questions)
-    .then(response => {
-      const answers = useResponses(response) // STOPPED HERE SUNDAY MORNING
+    .then(answers => {
+      if (answers.role === "Manager") {
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              message: "Please enter your office number: ",
+              name: "office"
+            }
+          ])
+          .then(response => {
+            const TeamManager = new Manager(answers.name, answers.email, answers.id, answers.role, response.office)
+            team.push(TeamManager)
+            addAdtl()
+          });
+      } else if (answers.role === "Engineer") {
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              message: "Please enter your github username: ",
+              name: "github"
+            }
+          ])
+          .then(response => {
+            const EngineerOnTeam = new Engineer(answers.name, answers.email, answers.id, answers.role, response.github)
+            team.push(EngineerOnTeam)
+            addAdtl()
+          });
+      } else if (answers.role === "Intern") {
+        inquirer
+          .prompt([
+            {
+              type: "input",
+              message: "Please enter your school name: ",
+              name: "school"
+            }
+          ])
+          .then(response => {
+            const InternOnTeam = new Intern(answers.name, answers.email, answers.id, answers.role, response.school)
+            team.push(InternOnTeam)
+            addAdtl()
+          })
+      }
     })
 };
 
