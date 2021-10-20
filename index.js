@@ -1,45 +1,6 @@
-// build an HMTL page that shows team members and their information
-// use inquirer to create the prompts in Node.js
- // first prompt will ask user to "Please build your team"
-  // starts by asking for the manager's information
-    // the prompts will ask user for:
-      // name
-      // id #
-      // email address
-      // office phone #
-      // here, user is prompted with question "What type of team member would you like to add?"
-        // engineer
-        // intern
-        // i don't want to add anymore
-          // then, questions about the employee
-            // employee name
-            // employee id
-            // employee email
-            // employee github
-            // then, back to...
-      // here, user is prompted with question "What type of team member would you like to add?"
-        // engineer
-        // intern
-        // i don't want to add anymore
-// once "I don't want to add anymore has been selected" then generate an team.html file which can be launched in the browser to show team info
-  // style the html page in the output folder style.css and have the team.html file generate to that folder too
-
-// NOTE: Testing is key to making code maintainable, so you’ll also write a unit test for every part of your code and ensure that it passes each test.
-  // need to do testing on functions using Jest (npm)
-
-/* GARY'S TIPS (USE CLASSES!!)
-  Use functions as a way of controlling the flow of questions
-  Use classes as a means of controlling data for each employee type
-    Employee
-      Manager
-      Engineer
-      Intern
-  When inquierer gathers up responses, you should be instantiating an object for each employee type
-*/
-
 const inquirer = require("inquirer");
 const fs = require("fs");
-
+//... why isn't employee being called anywhere
 const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
@@ -71,56 +32,6 @@ const questions = [
   }
 ];
 
-// STOPPED HERE SUNDAY NIGHT
-  // need to adjust id's in card
-  // need to add jQuery, make sure I'm calling functions in the correct places within the HTML ${HERE}
-  
-function generateHtmlCard() {
-  `
-  <div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 id="employee-role" class="card-title"></h5>
-    <p id="" class="card-text"></p>
-    <p class="card-text"></p>
-    <p class="card-text"></p>
-  </div>`
-}
-
-function generateHtmlSkel() {
-  `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="./output/style.css" />
-  <title>Team Profile</title>
-</head>
-<body>
-
-  <header class="container-fliud">
-    <nav class="navbar navbar-dark bg-primary justify-content-center">
-      <h1>Team Profile</h1>
-    </nav>
-  </header>
-
-  <main>
-    <div class="container-fluid row col-12">
-
-        <div class="card-deck container-fluid row">
-          
-          ${GENERATECARDHERE}
-
-          </div>
-        </div>
-  </main>
-  
-</body>
-</html>`
-};
-
 function addAdtl() {
   inquirer
     .prompt([
@@ -134,7 +45,7 @@ function addAdtl() {
       if (response.addEmployee === true) {
         init(team)
       } else {
-        generateHtmlSkel()
+        generateHtml()
       }
     })
 };
@@ -187,6 +98,66 @@ function init() {
           })
       }
     })
+};
+//... are the below key value pairs even correct??
+function htmlCard() {
+  `
+  <div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 id="employee-name" class="card-title">${response.name}</h5>
+    <p id="employee-role" class="card-text">${response.role}</p>
+    <p id="employee-id" class="card-text">${response.id}</p>
+    <p id="employee-email" class="card-text"><a href="mailto:${response.email}">Email: ${response.email}</a>
+  </div>`
+}
+
+function htmlSkel() {
+  `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="./output/style.css" />
+  <title>Team Profile</title>
+</head>
+<body>
+
+  <header class="container-fliud">
+    <nav class="navbar navbar-dark bg-primary justify-content-center">
+      <h1>Team Profile</h1>
+    </nav>
+  </header>
+
+  <main>
+    <div class="container-fluid row col-12">
+
+        <div class="card-deck container-fluid row">
+          
+          ${htmlCard}
+
+          </div>
+        </div>
+  </main>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</body>
+</html>`
+};
+
+function generateHtml() {
+  //... need to build this function to check the user responses
+  //... then move those responses to the writeFinalHtml function
+
+  writeFinalHtml(finalHtml);
+}
+
+function writeFinalHtml(finalHtml) {
+  fs.writeFile("./output/index.html", finalHtml, err => {
+      err ? console.log("Error... Something went wrong.") : console.log("Successfully generated index.html file!");
+  })
 };
 
 init();
