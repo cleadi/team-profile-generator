@@ -1,12 +1,12 @@
 const inquirer = require("inquirer");
 const fs = require("fs");
-//... why isn't employee being called anywhere
+
 const Employee = require("./lib/Employee");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 
-const team = [];
+let team = [];
 
 const questions = [
   {
@@ -64,7 +64,7 @@ function init() {
             }
           ])
           .then(response => {
-            const TeamManager = new Manager(answers.name, answers.email, answers.id, answers.role, response.office)
+            const TeamManager = new Manager(answers.name, answers.id, answers.email, answers.role, response.office)
             team.push(TeamManager)
             addAdtl()
           });
@@ -78,7 +78,7 @@ function init() {
             }
           ])
           .then(response => {
-            const EngineerOnTeam = new Engineer(answers.name, answers.email, answers.id, answers.role, response.github)
+            const EngineerOnTeam = new Engineer(answers.name, answers.id, answers.email, answers.role, response.github)
             team.push(EngineerOnTeam)
             addAdtl()
           });
@@ -96,23 +96,63 @@ function init() {
             team.push(InternOnTeam)
             addAdtl()
           })
+      } else {
+        return
       }
     })
 };
-//... are the below key value pairs even correct??
-function htmlCard() {
-  `
+
+function managerCard(data) {
+  return `
   <div class="card" style="width: 18rem;">
   <div class="card-body">
-    <h5 id="employee-name" class="card-title">${response.name}</h5>
-    <p id="employee-role" class="card-text">${response.role}</p>
-    <p id="employee-id" class="card-text">${response.id}</p>
-    <p id="employee-email" class="card-text"><a href="mailto:${response.email}">Email: ${response.email}</a>
+    <h5 id="employee-name" class="card-title">${data.name}</h5>
+    <p id="employee-role" class="card-text">${data.role}</p>
+    <p id="employee-id" class="card-text">${data.id}</p>
+    <p class="card-text">${data.office}</p>
+    <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+  </div>`
+}
+function engineerCard(data) {
+  return `
+  <div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 id="employee-name" class="card-title">${data.name}</h5>
+    <p id="employee-role" class="card-text">${data.role}</p>
+    <p id="employee-id" class="card-text">${data.id}</p>
+    <p id="employee-id" class="card-text">${data.github}</p>
+    <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+  </div>`
+}
+function internCard(data) {
+  return `
+  <div class="card" style="width: 18rem;">
+  <div class="card-body">
+    <h5 id="employee-name" class="card-title">${data.name}</h5>
+    <p id="employee-role" class="card-text">${data.role}</p>
+    <p id="employee-id" class="card-text">${data.id}</p>
+    <p id="employee-id" class="card-text">${data.school}</p>
+    <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
   </div>`
 }
 
-function htmlSkel() {
-  `
+function generateHtml(role) {
+
+  let builtHtmlCards = ''
+
+  for (let index = 0; index < team.length; index++) {
+    const employee = team[index];
+    console.log(employee)
+    if (employee.role === "Manager") {
+      builtHtmlCards += managerCard(employee)
+    } else if (employee.role === "Engineer") {
+      builtHtmlCards += engineerCard(employee)
+    } else if (employee.role === "Intern") {
+      builtHtmlCards += internCard(employee)
+    };
+  }
+
+  const finalHtml = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -136,7 +176,7 @@ function htmlSkel() {
 
         <div class="card-deck container-fluid row">
           
-          ${htmlCard}
+          ${builtHtmlCards}
 
           </div>
         </div>
@@ -145,14 +185,8 @@ function htmlSkel() {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </body>
 </html>`
-};
-
-function generateHtml() {
-  //... need to build this function to check the user responses
-  //... then move those responses to the writeFinalHtml function
-
   writeFinalHtml(finalHtml);
-}
+};
 
 function writeFinalHtml(finalHtml) {
   fs.writeFile("./output/index.html", finalHtml, err => {
