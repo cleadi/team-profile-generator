@@ -92,7 +92,7 @@ function init() {
             }
           ])
           .then(response => {
-            const InternOnTeam = new Intern(answers.name, answers.email, answers.id, answers.role, response.school)
+            const InternOnTeam = new Intern(answers.name, answers.id, answers.email, answers.role, response.school)
             team.push(InternOnTeam)
             addAdtl()
           })
@@ -105,34 +105,37 @@ function init() {
 function managerCard(data) {
   return `
   <div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 id="employee-name" class="card-title">${data.name}</h5>
-    <p id="employee-role" class="card-text">${data.role}</p>
-    <p id="employee-id" class="card-text">${data.id}</p>
-    <p class="card-text">${data.office}</p>
-    <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+    <div class="card-body">
+      <h5 id="employee-name" class="card-title">${data.name}</h5>
+      <p id="employee-role" class="card-text">${data.role}</p>
+      <p id="employee-id" class="card-text">${data.id}</p>
+      <p id="employee-special" class="card-text">${data.office}</p>
+      <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+    </div>
   </div>`
 }
 function engineerCard(data) {
   return `
   <div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 id="employee-name" class="card-title">${data.name}</h5>
-    <p id="employee-role" class="card-text">${data.role}</p>
-    <p id="employee-id" class="card-text">${data.id}</p>
-    <p id="employee-id" class="card-text">${data.github}</p>
-    <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+    <div class="card-body">
+      <h5 id="employee-name" class="card-title">${data.name}</h5>
+      <p id="employee-role" class="card-text">${data.role}</p>
+      <p id="employee-id" class="card-text">${data.id}</p>
+      <p id="employee-special" class="card-text">${data.github}</p>
+      <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+    </div>
   </div>`
 }
 function internCard(data) {
   return `
   <div class="card" style="width: 18rem;">
-  <div class="card-body">
-    <h5 id="employee-name" class="card-title">${data.name}</h5>
-    <p id="employee-role" class="card-text">${data.role}</p>
-    <p id="employee-id" class="card-text">${data.id}</p>
-    <p id="employee-id" class="card-text">${data.school}</p>
-    <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+    <div class="card-body">
+      <h5 id="employee-name" class="card-title">${data.name}</h5>
+      <p id="employee-role" class="card-text">${data.role}</p>
+      <p id="employee-id" class="card-text">${data.id}</p>
+      <p id="employee-special" class="card-text">${data.school}</p>
+      <p id="employee-email" class="card-text"><a href="mailto:${data.email}">Email: ${data.email}</a>
+    </div>
   </div>`
 }
 
@@ -149,42 +152,41 @@ function generateHtml(role) {
       builtHtmlCards += engineerCard(employee)
     } else if (employee.role === "Intern") {
       builtHtmlCards += internCard(employee)
-    };
+    }
   }
 
   const finalHtml = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-  <link rel="stylesheet" href="./output/style.css" />
-  <title>Team Profile</title>
-</head>
-<body>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+      <title>Team Profile</title>
+    </head>
+    <body>
 
-  <header class="container-fliud">
-    <nav class="navbar navbar-dark bg-primary justify-content-center">
-      <h1>Team Profile</h1>
-    </nav>
-  </header>
+      <header class="container-fliud">
+        <nav class="navbar navbar-dark bg-primary justify-content-center">
+          <h1>Team Profile</h1>
+        </nav>
+      </header>
 
-  <main>
-    <div class="container-fluid row col-12">
+      <main>
+        <div class="container-fluid row col-12">
 
-        <div class="card-deck container-fluid row">
-          
-          ${builtHtmlCards}
+            <div class="card-deck container-fluid row">
+              
+              ${builtHtmlCards}
 
-          </div>
+            </div>
         </div>
-  </main>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-</body>
-</html>`
+      </main>
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    </body>
+    </html>`
   writeFinalHtml(finalHtml);
 };
 
